@@ -70,7 +70,6 @@ class DeleteEntry(customtkinter.CTkToplevel):
         else:
             messagebox.showinfo("Success", "Successfully deleted!")
 
-
 # --- View Entry ---
 class ViewEntry(customtkinter.CTkToplevel):
     def __init__(self, master):
@@ -110,10 +109,10 @@ class ViewEntry(customtkinter.CTkToplevel):
         scrollbar.pack(side="right", fill="y")
 
         for credentials in results:
-            username = credentials.get("credentials", {}).get("username", "")
-            password = credentials.get("credentials", {}).get("password", "")  # actual password
-            website = credentials.get("website", "")
-            self.table.insert("", tk.END, values=(username, "***", website))
+            self.username = credentials.get("credentials", {}).get("username", "")
+            self.password = credentials.get("credentials", {}).get("password", "")  # actual password
+            self.website = credentials.get("website", "")
+            self.table.insert("", tk.END, values=(self.username, "***", self.website))
 
         self.table.bind("<<TreeviewSelect>>", self.on_row_selected)
         self.grab_set()
@@ -127,8 +126,8 @@ class ViewEntry(customtkinter.CTkToplevel):
         values = self.table.item(item_id, "values")
         username, masked_password, website = values
         # Assuming you can get the real password via module
-        real_password = module.get_password(username, website) if hasattr(module, 'get_password') else "(hidden for demo)"
-        messagebox.showinfo("Info", f"Website: {website}\nUsername: {username}\nPassword: {real_password}")
+        
+        messagebox.showinfo("Info", f"Website: {website}\nUsername: {username}\nPassword: {module.decrypt(self.password)}")
 
 # --- Update Entry ---
 class UpdateEntry(customtkinter.CTkToplevel):
@@ -316,7 +315,6 @@ class App(customtkinter.CTk):
     def update_entry(self):
         update_dialog = UpdateEntry(self)
         update_dialog.geometry(self.center_to_parent(self, 600, 250))
-
 
 if __name__ == "__main__":
     customtkinter.set_appearance_mode("Dark")

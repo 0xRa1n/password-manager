@@ -3,7 +3,6 @@ import time, os, json
 from base64 import b64encode, b64decode
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
-# encryption is removed
 
 def add_entry(website:str, username: str, password: str):
     with open("passwords.json", "r+", encoding="UTF-8") as file:
